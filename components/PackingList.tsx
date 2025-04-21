@@ -90,12 +90,20 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                         keyExtractor={(_, i) => i.toString()}
                         renderItem={({ item, index }) => (
                             <View style={styles.item}>
-                                <Pressable onPress={() => toggleItem(index)} style={styles.checkbox}>
+                                <Pressable onPress={() => toggleItem(index)} 
+                                 style={({pressed}) => [
+                                    {
+                                      backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
+                                    },
+                                    styles.checkbox,
+                                  ]}
+                                >
                                     <Text style={{ fontSize: 18 }}>{item.done ? '✅' : '⬜'}</Text>
+                                    <Text style={[styles.text, item.done && styles.done]}>
+                                        {item.label}
+                                    </Text>
                                 </Pressable>
-                                <Text style={[styles.text, item.done && styles.done]}>
-                                    {item.label}
-                                </Text>
+
                             </View>
                         )}
                     />
@@ -118,6 +126,13 @@ const styles = StyleSheet.create({
     },
     checkbox: {
         marginRight: 10,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        flexDirection: 'row',
+        // backgroundColor: 'yellow',
+        // marginBottom: 10,
+        // width: 200,
     },
     text: {
         fontSize: 16,
