@@ -8,7 +8,7 @@ const Packing = () => {
   const [selectedDuration, setSelectedDuration] = useState<typeof durations[number]>('Weekend')
   return (
     <SafeAreaView style={{ padding: 20 }}>
-      <ScrollView>
+      
         <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Select trip duration:</Text>
         <View style={{ flexDirection: 'row', marginBottom: 20, }}>
           {durations.map((duration) => (
@@ -22,7 +22,7 @@ const Packing = () => {
         </View>
 
         <PackingList duration={selectedDuration} />
-      </ScrollView>
+       
     </SafeAreaView>
   )
 }
