@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router'
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
     return (
@@ -13,12 +14,14 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'Packing List',
+                    tabBarIcon: ({color}) => <MaterialIcons size={20} name='checklist' color={color}/>
                 }}
             />
             <Tabs.Screen
                 name="travel"
                 options={{
-                    title: 'Travel Info'
+                    title: 'Travel Info',
+                    tabBarIcon: ({color}) => <MaterialIcons size={20} name='airplane-ticket' color={color}/>
                 }}
             />
         </Tabs>
