@@ -10,7 +10,7 @@ export default function TabLayout() {
             headerTitleStyle: { fontFamily: "monospace", fontWeight: 900 },
             }}>
             <Tabs.Screen
-                name="packing"
+                name="index"
                 options={{
                     title: 'Packing List',
                 }}
