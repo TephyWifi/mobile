@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { View, Text, FlatList, StyleSheet, Pressable, useWindowDimensions } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import client from '../lib/sanity'
+import { MaterialIcons } from '@expo/vector-icons';
 
 type PackingItem = {
     label: string
@@ -15,7 +16,7 @@ type Props = {
 
 const PackingList: React.FC<Props> = ({ duration }) => {
     const [items, setItems] = useState<PackingItem[]>([])
-
+    const [history, setHistory] = useState<PackingItem[][]>([])   
     const storageKey = `packingList-${duration}`
 
     useEffect(() => {
@@ -50,14 +51,29 @@ const PackingList: React.FC<Props> = ({ duration }) => {
         )
     }, [items])
 
-    const toggleItem = useCallback((index: number) => {
-        const updated = [...items];
-        updated[index].done = !updated[index].done;
-        setItems([
-            ...updated.filter((i) => !i.done),
-            ...updated.filter((i) => i.done),
-        ]);
-    }, [items]);
+
+    const toggleItem = useCallback(
+        (index: number) => {
+            setHistory((prev) => [...prev, items]); 
+
+            const updated = [...items];
+            updated[index].done = !updated[index].done;
+            setItems([
+                ...updated.filter((i) => !i.done),
+                ...updated.filter((i) => i.done),
+            ]);
+        },
+        [items]
+    );
+
+    const undoLastAction = useCallback(() => {
+        if (history.length > 0) {
+            const previousState = history[history.length - 1];
+            setHistory((prev) => prev.slice(0, -1));
+            const updatedItems = previousState.map(item => ({ ...item, done: false }));
+            setItems(updatedItems);
+        }
+    }, [history]);
 
     const checkAll = () => {
         const updated = items.map(item => ({ ...item, done: true }))
@@ -84,13 +100,18 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                         <Pressable onPress={uncheckAll} style={styles.button}>
                             <Text style={styles.buttonText}>⬜ Uncheck All</Text>
                         </Pressable>
+                        <Pressable onPress={undoLastAction} disabled={history.length === 0} style={styles.button} >
+                            <Text style={styles.buttonText}> 
+                                <MaterialIcons name='undo' size={14} color={'black'}/> Uncheck Last
+                            </Text>
+                        </Pressable>
                     </View>
 
                     <FlatList
                         data={items}
                         keyExtractor={(_, i) => i.toString()}
                         contentContainerStyle={{
-                            height: height, 
+                            height: height,
                             paddingRight: 50,
                         }}
                         renderItem={({ item, index }) => (
@@ -108,11 +129,9 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                                         {item.label}
                                     </Text>
                                 </Pressable>
-
                             </View>
                         )}
                     />
-
                 </>
             )}
         </View>
@@ -122,6 +141,7 @@ const PackingList: React.FC<Props> = ({ duration }) => {
 const styles = StyleSheet.create({
     container: {
         marginBottom: 30,
+        width: '100%',
     },
     header: {
         fontSize: 20,
@@ -138,7 +158,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         gap: 10,
-        flexDirection: 'row',    
+        flexDirection: 'row',
     },
     text: {
         fontSize: 16,
@@ -149,18 +169,19 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         marginBottom: 10,
     },
     button: {
         paddingVertical: 6,
-        paddingHorizontal: 12,
+        paddingHorizontal: 2,
         backgroundColor: '#eee',
-        borderRadius: 8,
+        borderRadius: 8,        
     },
     buttonText: {
         fontSize: 14,
         fontWeight: 'bold',
+        justifyContent: 'center',
     },
 
 })
