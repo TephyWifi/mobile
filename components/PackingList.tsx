@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Pressable, useWindowDimensions } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import client from '../lib/sanity'
 
@@ -68,9 +68,10 @@ const PackingList: React.FC<Props> = ({ duration }) => {
         const updated = items.map(item => ({ ...item, done: false }))
         setItems(updated)
     }
+    const { height } = useWindowDimensions()
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text style={styles.header}>Packing List ({duration})</Text>
             {items.length === 0 ? (
                 <Text>Loading items...</Text>
@@ -88,15 +89,19 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                     <FlatList
                         data={items}
                         keyExtractor={(_, i) => i.toString()}
+                        contentContainerStyle={{
+                            height: height, 
+                            paddingRight: 50,
+                        }}
                         renderItem={({ item, index }) => (
                             <View style={styles.item}>
-                                <Pressable onPress={() => toggleItem(index)} 
-                                 style={({pressed}) => [
-                                    {
-                                      backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
-                                    },
-                                    styles.checkbox,
-                                  ]}
+                                <Pressable onPress={() => toggleItem(index)}
+                                    style={({ pressed }) => [
+                                        {
+                                            backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
+                                        },
+                                        styles.checkbox,
+                                    ]}
                                 >
                                     <Text style={{ fontSize: 18 }}>{item.done ? '✅' : '⬜'}</Text>
                                     <Text style={[styles.text, item.done && styles.done]}>
@@ -107,6 +112,7 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                             </View>
                         )}
                     />
+
                 </>
             )}
         </View>
@@ -114,6 +120,9 @@ const PackingList: React.FC<Props> = ({ duration }) => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: 30,
+    },
     header: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -129,10 +138,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         gap: 10,
-        flexDirection: 'row',
-        // backgroundColor: 'yellow',
-        // marginBottom: 10,
-        // width: 200,
+        flexDirection: 'row',    
     },
     text: {
         fontSize: 16,
