@@ -5,6 +5,7 @@ import client from '../lib/sanity'
 
 type PackingItem = {
     label: string
+    number: number
     essential?: boolean
     done?: boolean
     category?: string
@@ -17,6 +18,7 @@ type Props = {
 const PackingList: React.FC<Props> = ({ duration }) => {
     const [items, setItems] = useState<PackingItem[]>([])
     const [newItemLabel, setNewItemLabel] = useState('')
+    const [newItemNumber, setNewItemNumber] = useState<number>(0)
     const [newCategory, setNewCategory] = useState('')
 
     const storageKey = `packingList-${duration}`
@@ -79,13 +81,19 @@ const PackingList: React.FC<Props> = ({ duration }) => {
 
     const addItem = () => {
         if (!newItemLabel.trim()) return;
+
+        const parsedNumber = parseInt(newItemNumber as unknown as string);
+        if (isNaN(parsedNumber)) return;
+
         const newItem: PackingItem = {
             label: newItemLabel,
+            number: parsedNumber,
             done: false,
             category: newCategory.trim() || 'Uncategorized',
         }
         setItems(prev => [...prev, newItem])
         setNewItemLabel('')
+        setNewItemNumber(0)
         setNewCategory('')
     }
 
@@ -130,10 +138,10 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                                             <Text style={{ fontSize: 18 }}>{item.done ? '✅' : '⬜'}</Text>
                                         </Pressable>
                                         <Text style={[styles.text, item.done && styles.done]}>
-                                            {item.label}
+                                            {(item.number ?? 1)} x {item.label}
                                         </Text>
                                         <TouchableOpacity onPress={() => removeItem(items.indexOf(item))}>
-                                            <Text style={styles.removeText}>Remove</Text>
+                                            <Text style={styles.removeText}>X</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ))}
@@ -146,6 +154,16 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                         value={newItemLabel}
                         onChangeText={setNewItemLabel}
                         style={styles.input}
+                    />
+                    <TextInput
+                    placeholder='Add amount'
+                    value={newItemNumber.toString()}
+                    onChangeText={(input) => {
+                        const num = parseInt(input)
+                        setNewItemNumber(isNaN(num) ? 0 : num)
+                    }}
+                    keyboardType='numeric'
+                    style={styles.input}
                     />
                     <TextInput
                         placeholder='Category (e.g. Clothing, Tech)'
@@ -168,11 +186,14 @@ const styles = StyleSheet.create({
     listContainer: {
         flex: 1,
         marginBottom: 12,
+        // backgroundColor: 'yellow'
     },
     header: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: 'pink',
+        display: 'none'
     },
     item: {
         flexDirection: 'row',
@@ -185,28 +206,32 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         flex: 1,
+        color: 'white'
     },
     done: {
         color: '#aaa',
         textDecorationLine: 'line-through',
     },
     removeText: {
-        color: 'red',
+        color: 'deeppink',
+        marginLeft: 10,
     },
     buttonRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 10,
+        // backgroundColor: 'pink',
     },
     button: {
         paddingVertical: 6,
         paddingHorizontal: 12,
-        backgroundColor: '#eee',
+        backgroundColor: '#1c1429',
         borderRadius: 8,
     },
     buttonText: {
         fontSize: 14,
         fontWeight: 'bold',
+        color: 'white'
     },
     input: {
         borderWidth: 1,
@@ -214,12 +239,14 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         marginTop: 8,
         marginBottom: 8,
+        backgroundColor: 'white'
     },
     categoryTitle: {
         fontSize: 16,
         fontWeight: 'bold',
         marginTop: 12,
         marginBottom: 4,
+        color: 'pink'
     },
 
 })

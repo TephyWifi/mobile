@@ -18,7 +18,7 @@ const Packing = () => {
             <Button
               title={duration}
               onPress={() => setSelectedDuration(duration)}
-              color={selectedDuration === duration ? '#007AFF' : '#ccc'}
+              color={selectedDuration === duration ? '#ff1493' : '#1c1429'}
             />
           </View>
         ))}
@@ -34,17 +34,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#1c1429',
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'pink'
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    // backgroundColor: 'yellow'
+  },
+  buttonStyle: {
+    backgroundColor: 'pink'
+    
+
   },
   buttonWrapper: {
     flex: 1,

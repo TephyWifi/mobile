@@ -12,7 +12,8 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Packing List',
+                    title: 'PACKING LIST',
+                    headerTitleAlign: 'center',
                 }}
             />
             <Tabs.Screen
