@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, StyleSheet, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import client from '../lib/sanity'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
 
 type PackingItem = {
     label: string
@@ -115,7 +116,7 @@ const PackingList: React.FC<Props> = ({ duration }) => {
         <View style={styles.container}>
             <Text style={styles.header}>Packing List ({duration})</Text>
             {items.length === 0 ? (
-                <Text>Loading items...</Text>
+                <Text style={{ color: 'white' }}>Loading items...</Text>
             ) : (
                 <>
                     <View style={styles.buttonRow}>
@@ -156,14 +157,14 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                         style={styles.input}
                     />
                     <TextInput
-                    placeholder='Add amount'
-                    value={newItemNumber.toString()}
-                    onChangeText={(input) => {
-                        const num = parseInt(input)
-                        setNewItemNumber(isNaN(num) ? 0 : num)
-                    }}
-                    keyboardType='numeric'
-                    style={styles.input}
+                        placeholder='Add amount'
+                        value={newItemNumber.toString()}
+                        onChangeText={(input) => {
+                            const num = parseInt(input)
+                            setNewItemNumber(isNaN(num) ? 0 : num)
+                        }}
+                        keyboardType='numeric'
+                        style={styles.input}
                     />
                     <TextInput
                         placeholder='Category (e.g. Clothing, Tech)'
@@ -171,7 +172,10 @@ const PackingList: React.FC<Props> = ({ duration }) => {
                         onChangeText={setNewCategory}
                         style={styles.input}
                     />
-                    <Button title='Add Item' onPress={addItem} />
+                    <Button
+                    title='Add Item' 
+                    onPress={addItem} 
+                    />
                 </>
             )}
         </View>

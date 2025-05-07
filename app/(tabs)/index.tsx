@@ -11,7 +11,7 @@ const Packing = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Select trip duration:</Text>
+      <View style={styles.titleWrapper}><Text style={styles.title}>SELECT TRIP DURATION</Text></View>
       <View style={styles.buttonRow}>
         {durations.map((duration) => (
           <View key={duration} style={styles.buttonWrapper}>
@@ -36,11 +36,14 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#1c1429',
   },
+  titleWrapper: {
+    alignItems: 'center',
+  },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: 'pink'
+    color: 'pink',
   },
   buttonRow: {
     flexDirection: 'row',
